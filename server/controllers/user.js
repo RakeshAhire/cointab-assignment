@@ -4,18 +4,15 @@ const { createError } = require("../utils/cutomError");
 
 const handleLogin = async (req, res, next) => {
     const { email, password } = req.body;
-   
 
     try {
         const user = await UserModel.findOne({ email });
-       
 
         if (!user) {
             return  next(createError(401, 'Invalid Email or password.'));
         }
 
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-
 
         if (!isPasswordMatch) {
             user.loginAttempts += 1;
@@ -32,8 +29,7 @@ const handleLogin = async (req, res, next) => {
         user.loginAttempts = 0;
         user.lastLoginAttempt = null;
         await user.save();
-        console.log('user: ', user);
-        // handle successful login
+
         return res.status(200).json({ username: user.email, message: 'Login successful.' });
     } catch (error) {
         next(error);
