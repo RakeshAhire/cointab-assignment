@@ -1,12 +1,15 @@
 const { UserModel } = require("../models/user.model");
 
 const blockUser = async (req, res, next) => {
-    const { username } = req.body;
+    const { email } = req.body;
+    console.log('email: ', email);
   
     try {
-      const user = await UserModel.findOne({ username });
+      const user = await UserModel.findOne({ email });
   
-      if (user.loginAttempts >= 5 && user.lastLoginAttempt.getTime() + 24 * 60 * 60 * 1000 > Date.now()) {
+      if (user.loginAttempts >= 5 && user.lastLoginAttempt.getTime() + 1 * 60 * 60 * 1000 > Date.now()) {
+        console.log('Date.now(): ', Date.now());
+        console.log('user.lastLoginAttempt.getTime(): ', user.lastLoginAttempt.getTime()+ 1 * 60 * 60 * 1000 );
         // user has exceeded max login attempts and is still blocked
         return res.status(403).json({ message: 'Your account has been blocked. Please try again later.' });
       } else if (user.loginAttempts >= 5) {

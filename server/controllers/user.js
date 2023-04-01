@@ -4,32 +4,35 @@ const { createError } = require("../utils/cutomError");
 
 const handleLogin = async (req, res, next) => {
     const { email, password } = req.body;
+   
 
     try {
         const user = await UserModel.findOne({ email });
+       
 
         if (!user) {
-            next(createError(401, 'Invalid Email or password.'));
+            return  next(createError(401, 'Invalid Email or password.'));
         }
 
         const isPasswordMatch = await bcrypt.compare(password, user.password);
+
 
         if (!isPasswordMatch) {
             user.loginAttempts += 1;
             user.lastLoginAttempt = new Date();
             await user.save();
-
+            // console.log('user: ', user);
             if (user.loginAttempts >= 5) {
-                next(createError(403, 'Your account has been blocked. Please try again 24 hours later.'));
+                return next(createError(401, 'Your account has been blocked. Please try again 24 hours later.'));
             }
-            next(createError(401, 'Invalid username or password.'));
+            return next(createError(401, 'Invalid username or password.'));
         }
 
         // reset login attempts on successful login
         user.loginAttempts = 0;
         user.lastLoginAttempt = null;
         await user.save();
-
+        console.log('user: ', user);
         // handle successful login
         return res.status(200).json({ username: user.email, message: 'Login successful.' });
     } catch (error) {
