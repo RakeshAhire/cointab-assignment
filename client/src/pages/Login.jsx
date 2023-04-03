@@ -40,9 +40,9 @@ const Login = () => {
       })
     }
     else {
-      axios.post("http://localhost:8080/user/login", details)
+      axios.post("https://crimson-buffalo-garb.cyclic.app/user/login", details)
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           if (res.data.error) {
             toast({
               title: "Error",

@@ -39,7 +39,7 @@ const Register = () => {
             })
         }
         else {
-            axios.post("http://localhost:8080/user/register", details)
+            axios.post("https://crimson-buffalo-garb.cyclic.app/user/register", details)
                 .then(res => {
                     if (res.data.success) {
                         navigate("/");
