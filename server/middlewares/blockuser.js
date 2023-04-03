@@ -23,7 +23,7 @@ const blockUser = async (req, res, next) => {
     next();
   }
   catch (error) {
-    return res.status(500).json({error:error, message: 'Something went wrong. Please try again later.' });
+    return res.status(500).json({message: 'Something went wrong. Please try again later.' });
   }
 };
 
